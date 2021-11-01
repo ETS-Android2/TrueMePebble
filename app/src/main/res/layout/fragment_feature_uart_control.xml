@@ -84,7 +84,7 @@
 		android:layout_above="@+id/spacer"
 		android:layout_centerHorizontal="true"
 		android:onClick="onConnectClicked"
-		android:text="@string/action_connect"/>
+		android:text="@string/action_connect" />
 
 	<View
 		android:id="@+id/spacer"

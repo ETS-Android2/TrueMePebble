@@ -53,7 +53,7 @@ public class UARTManager extends LoggableBleManager<UARTManagerCallbacks> {
 	 */
 	private boolean useLongWrite = true;
 
-	UARTManager(final Context context) {
+	public UARTManager(final Context context) {
 		super(context);
 	}
 

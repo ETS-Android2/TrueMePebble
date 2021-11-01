@@ -98,6 +98,8 @@ public abstract class BleProfileExpandableListActivity extends ExpandableListAct
 		onViewCreated(savedInstanceState);
 	}
 
+
+
 	/**
 	 * You may do some initialization here. This method is called from {@link #onCreate(Bundle)} before the view was created.
 	 */

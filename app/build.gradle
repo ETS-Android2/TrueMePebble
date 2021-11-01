@@ -35,6 +35,7 @@ android {
 dependencies {
     implementation project(':common')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
     wearApp project(path: ':wear')
 
     // nRF Toolbox is using Play Service 10.2.0 in order to make the app working in China:
@@ -48,6 +49,7 @@ dependencies {
 
     implementation 'no.nordicsemi.android:log:2.2.0'
     implementation 'no.nordicsemi.android.support.v18:scanner:1.4.3'
+    implementation 'com.nabinbhandari.android:permissions:3.8'
 
     // The DFU Library is imported automatically from jcenter:
     implementation 'no.nordicsemi.android:dfu:1.10.3'
