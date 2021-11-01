@@ -21,7 +21,7 @@
   -->
 <resources>
 
-    <string name="app_name">True me Pebble</string>
+    <string name="app_name">TrueMe Pebble</string>
 
     <string name="shortcut_dfu_short">DFU</string>
     <string name="shortcut_dfu_long">Device Firmware Update</string>
