@@ -218,6 +218,8 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
             @Override
             public void run() {
                 manager.send("COM 090002550003000");
+                tv.append("\nSent: "+"COM 090002550003000");
+
             }
         },1000);
     }
@@ -294,15 +296,20 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
         if (data.contains("ACK1"))
         {
             manager.send("DEL 05000");
+            tv.append("\nSent: "+"DEL 05000");
+
         }else if (data.contains("ACK2"))
         {
             manager.send("WRD ROB_");
+            tv.append("\nSent: "+"WRD ROB_");
+
         }else if (data.contains("ACK3"))
         {
-            tv.append("\nACK3");
+            tv.append("\n");
             if (pebble==1)
             {
                 pebble=2;
+                bleManager.disconnect();
                 startScan();
             }else
             {
