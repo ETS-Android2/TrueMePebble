@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,21 +43,23 @@ import no.nordicsemi.android.support.v18.scanner.ScanResult;
 import no.nordicsemi.android.support.v18.scanner.ScanSettings;
 
 public class TrueMePebble extends AppCompatActivity implements UARTManagerCallbacks {
-    boolean scanning=false;
     BluetoothLeScannerCompat scanner;
     private ILogSession logSession;
     private LoggableBleManager<? extends BleManagerCallbacks> bleManager;
 
-    boolean connecting=false;
+    int pebble=1;
     UARTManager manager;
-    TextView tv;
 
+    boolean scanning=false;
+    TextView tv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_true_me_pebble);
 
-        tv=findViewById(R.id.tv);
+
+        tv=findViewById(R.id.display);
+        tv.setMovementMethod(new ScrollingMovementMethod());
 
         bleManager = initializeManager();
 
@@ -74,8 +77,6 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
     protected LoggableBleManager<? extends BleManagerCallbacks> initializeManager() {
         manager=new UARTManager(this);
         manager.setGattCallbacks(this);
-        //final BPMManager manager = BPMManager.getBPMManager(getApplicationContext());
-        //manager.setGattCallbacks(this);
         return manager;
     }
 
@@ -108,6 +109,15 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
         });
     }
     void startScan() {
+        if (pebble==1)
+        {
+            tv.append("Scanning...");
+            tv.append("\nFinding Pebble 1...");
+        }else if (pebble==2)
+        {
+            tv.append("Scanning...");
+            tv.append("\nFinding Pebble 2...");
+        }
         scanner = BluetoothLeScannerCompat.getScanner();
         final ScanSettings settings = new ScanSettings.Builder()
                 .setLegacy(false)
@@ -116,7 +126,6 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
         filters.add(new ScanFilter.Builder().setServiceUuid(null).build());
         scanner.startScan(filters, settings, scanCallback);
         scanning=true;
-
     }
     private ScanCallback scanCallback = new ScanCallback() {
         @Override
@@ -127,18 +136,29 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
         @Override
         public void onBatchScanResults(@NonNull final List<ScanResult> results) {
             try {
-                tv.setText("");
+
                 for (int i=0;i<results.size();i++)
                 {
 
-                    if (!results.get(i).getDevice().getName().isEmpty())
+                    if (!results.get(i).getDevice().getName().isEmpty() && pebble==1)
                     {
-                        tv.append(results.get(i).getDevice().getName()+" \n");
                         if (results.get(i).getDevice().getName().startsWith("SR01_"))
                         {
-                            tv.append(results.get(i).getDevice().getName()+" Found");
+                            tv.append("\nFound "+results.get(i).getDevice().getName());
                             connectDevice(results.get(i).getDevice());
                             scanner.stopScan(scanCallback);
+                            scanning=false;
+                            break;
+
+                        }
+                    }else if (!results.get(i).getDevice().getName().isEmpty() && pebble==2)
+                    {
+                        if (results.get(i).getDevice().getName().startsWith("SR02_"))
+                        {
+                            tv.append("\nFound "+results.get(i).getDevice().getName());
+                            connectDevice(results.get(i).getDevice());
+                            scanner.stopScan(scanCallback);
+                            scanning=false;
                             break;
 
                         }
@@ -187,47 +207,15 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
 
     @Override
     public void onDeviceConnecting(@NonNull BluetoothDevice device) {
-        Toast.makeText(getApplicationContext(), "Connecting to "+device.getName(), Toast.LENGTH_SHORT).show();
+        tv.append("\nConnecting to "+device.getName());
     }
 
     @Override
     public void onDeviceConnected(@NonNull BluetoothDevice device) {
-        Toast.makeText(getApplicationContext(), "Connected to "+device.getName(), Toast.LENGTH_SHORT).show();
+        tv.append("\nConnected to "+device.getName());
 
         try {
-            final UARTInterface uart = (UARTInterface) new UARTActivity();
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    manager.send("COM 090002550003000");
-
-                }
-            }, 2000);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    manager.send("DEL 05000");
-
-                }
-            }, 4000);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    manager.send("WRD ROB_");
-
-                }
-            }, 6000);
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    manager.send("WRD ROB_");
-
-                }
-            }, 8000);
-
-
+            manager.send("COM 090002550003000");
 
         }catch (Exception e)
         {
@@ -273,7 +261,6 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
 
     @Override
     public void onBondingFailed(@NonNull BluetoothDevice device) {
-        Toast.makeText(getApplicationContext(), "Bonded Failed", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -287,19 +274,48 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
 
     }
 
-    public void btn(View view) {
+    public void start(View view) {
         startScan();
+    }
+    public void stop(View view) {
+        if (scanning)
+        {
+            scanner.stopScan(scanCallback);
+            tv.append("\nScanning Ended");
+        }else
+        {
+            tv.append("\nBeing Executed Can't Stop");
+
+        }
     }
 
     @Override
     public void onDataReceived(@NonNull BluetoothDevice device, String data) {
-        Toast.makeText(getApplicationContext(), "Command Sent : "+data, Toast.LENGTH_SHORT).show();
+        tv.append("\nReceived: "+data);
+
+        if (data.contains("ACK1"))
+        {
+            manager.send("DEL 05000");
+        }else if (data.contains("ACK2"))
+        {
+            manager.send("WRD ROB_");
+        }else if (data.contains("ACK3"))
+        {
+            tv.append("\nACK3");
+            if (pebble==1)
+            {
+                pebble=2;
+                startScan();
+            }else
+            {
+                tv.append("\nSession Ended");
+            }
+        }
 
     }
 
     @Override
     public void onDataSent(@NonNull BluetoothDevice device, String data) {
-        Toast.makeText(getApplicationContext(), "RESPONSE : "+data, Toast.LENGTH_SHORT).show();
-
+        tv.append("\nSent: "+data);
     }
 }
