@@ -50,7 +50,7 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
     int pebble=1;
     UARTManager manager;
 
-    boolean connected=false;
+    boolean connected=false,stoping=false;
     TextView tv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -214,7 +214,12 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
 
         connected=true;
 
-        if (pebble==2)
+        if (stoping)
+        {
+            manager.send("SLE");
+            tv.append("\nSession Ended for pebbele"+pebble);
+            stoping=false;
+        }else if (pebble==2)
         {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -291,7 +296,16 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
     public void stop(View view) {
         try {
             manager.send("SLE");
-            tv.append("\nScanning Ended for pebbele"+pebble);
+            tv.append("\nSession Ended for pebbele"+pebble);
+            stoping=true;
+            if (pebble==1)
+            {
+                pebble=2;
+            }else if (pebble==2)
+            {
+                pebble=1;
+            }
+            startScan();
         }catch (Exception e)
         {
 
