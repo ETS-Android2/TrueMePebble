@@ -199,21 +199,21 @@ public class TrueMePebble extends AppCompatActivity implements BleManagerCallbac
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    uart.send("COM 090002550003000");
+                    manager.send("COM 090002550003000");
 
                 }
             }, 2000);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    uart.send("DEL 05000");
+                    manager.send("DEL 05000");
 
                 }
             }, 4000);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    uart.send("WRD ROB_");
+                    manager.send("WRD ROB_");
 
                 }
             }, 6000);
@@ -221,7 +221,7 @@ public class TrueMePebble extends AppCompatActivity implements BleManagerCallbac
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    uart.send("WRD ROB_");
+                    manager.send("WRD ROB_");
                     Toast.makeText(getApplicationContext(), "Command Sent", Toast.LENGTH_SHORT).show();
 
                 }
