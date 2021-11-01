@@ -47,7 +47,7 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
     private ILogSession logSession;
     private LoggableBleManager<? extends BleManagerCallbacks> bleManager;
 
-    int pebble=2;
+    int pebble=1;
     UARTManager manager;
 
     boolean connected=false;
@@ -101,6 +101,7 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
         Permissions.check(this/*context*/, permissions, null/*rationale*/, null/*options*/, new PermissionHandler() {
             @Override
             public void onGranted() {
+                startScan();
             }
             @Override
             public void onDenied(Context context, ArrayList<String> deniedPermissions) {
@@ -212,14 +213,7 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
         tv.append("\nConnected to "+device.getName());
 
         connected=true;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                manager.send("COM 090002550003000");
-                tv.append("\nSent: "+"COM 090002550003000");
 
-            }
-        },1000);
     }
 
     @Override
@@ -231,6 +225,7 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
     public void onDeviceDisconnected(@NonNull BluetoothDevice device) {
         tv.append("\n"+device.getName()+" Disconnected");
         connected=false;
+        startScan();
     }
 
     @Override
@@ -274,16 +269,19 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
     }
 
     public void start(View view) {
-        startScan();
-    }
-    public void stop(View view) {
         if (connected)
         {
+            manager.send("COM 090002550003000");
+            tv.append("\nSent: "+"COM 090002550003000");
+
+        }
+    }
+    public void stop(View view) {
+        try {
             manager.send("SLE");
             tv.append("\nScanning Ended for pebbele"+pebble);
-        }else
+        }catch (Exception e)
         {
-            tv.append("\nNot Connected");
 
         }
     }
@@ -307,14 +305,8 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
             tv.append("\n");
             if (pebble==1)
             {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        //startScan();
-                    }
-                },1000);
-                //pebble=2;
-                //bleManager.disconnect().enqueue();
+                pebble=2;
+                bleManager.disconnect().enqueue();
 
             }else
             {
