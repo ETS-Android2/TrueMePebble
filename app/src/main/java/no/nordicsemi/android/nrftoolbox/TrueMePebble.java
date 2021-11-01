@@ -72,7 +72,7 @@ public class TrueMePebble extends AppCompatActivity implements BleManagerCallbac
 
     protected LoggableBleManager<? extends BleManagerCallbacks> initializeManager() {
         manager=new UARTManager(this);
-        manager.setGattCallbacks(this);
+        manager.setGattCallbacks((BleManagerCallbacks) this);
         //final BPMManager manager = BPMManager.getBPMManager(getApplicationContext());
         //manager.setGattCallbacks(this);
         return manager;

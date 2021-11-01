@@ -67,7 +67,7 @@ public class UARTManager extends LoggableBleManager<UARTManagerCallbacks> {
 	 * BluetoothGatt callbacks for connection/disconnection, service discovery,
 	 * receiving indication, etc.
 	 */
-	private class UARTManagerGattCallback extends BleManagerGattCallback {
+	public class UARTManagerGattCallback extends BleManagerGattCallback {
 
 		@Override
 		protected void initialize() {
