@@ -112,11 +112,11 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
     void startScan() {
         if (pebble==1)
         {
-            tv.append("Scanning...");
+            tv.append("\nScanning...");
             tv.append("\nFinding Pebble 1...");
         }else if (pebble==2)
         {
-            tv.append("Scanning...");
+            tv.append("\nScanning...");
             tv.append("\nFinding Pebble 2...");
         }
         scanner = BluetoothLeScannerCompat.getScanner();
@@ -213,6 +213,18 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
         tv.append("\nConnected to "+device.getName());
 
         connected=true;
+
+        if (pebble==2)
+        {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    manager.send("COM 090002550003000");
+                    tv.append("\nSent: "+"COM 090002550003000");
+
+                }
+            },1000);
+        }
 
     }
 
