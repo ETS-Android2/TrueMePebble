@@ -216,9 +216,15 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
 
         if (stoping)
         {
-            manager.send("SLE");
-            tv.append("\nSession Ended for pebbele"+pebble);
-            stoping=false;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    manager.send("SLE");
+                    tv.append("\nSession Ended for pebbele"+pebble);
+                    stoping=false;
+                }
+            },1000);
+
         }else if (pebble==2)
         {
             new Handler().postDelayed(new Runnable() {
