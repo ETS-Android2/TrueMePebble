@@ -310,11 +310,11 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        startScan();
+                        //startScan();
                     }
                 },1000);
-                pebble=2;
-                bleManager.disconnect().enqueue();
+                //pebble=2;
+                //bleManager.disconnect().enqueue();
 
             }else
             {
