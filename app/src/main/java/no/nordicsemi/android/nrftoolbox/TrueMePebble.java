@@ -214,14 +214,12 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
     public void onDeviceConnected(@NonNull BluetoothDevice device) {
         tv.append("\nConnected to "+device.getName());
 
-        try {
-            manager.send("COM 090002550003000");
-
-        }catch (Exception e)
-        {
-            Toast.makeText(getApplicationContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-
-        }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                manager.send("COM 090002550003000");
+            }
+        },1000);
     }
 
     @Override
