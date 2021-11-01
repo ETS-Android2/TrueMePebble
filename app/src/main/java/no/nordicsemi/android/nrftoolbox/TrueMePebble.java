@@ -231,6 +231,7 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
 
     @Override
     public void onDeviceDisconnected(@NonNull BluetoothDevice device) {
+        tv.append("\n"+device.getName()+" Disconnected");
 
     }
 
