@@ -47,7 +47,7 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
     private ILogSession logSession;
     private LoggableBleManager<? extends BleManagerCallbacks> bleManager;
 
-    int pebble=1;
+    int pebble=2;
     UARTManager manager;
 
     boolean connected=false;
