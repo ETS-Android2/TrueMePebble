@@ -34,13 +34,14 @@ import no.nordicsemi.android.nrftoolbox.profile.LoggableBleManager;
 import no.nordicsemi.android.nrftoolbox.uart.UARTActivity;
 import no.nordicsemi.android.nrftoolbox.uart.UARTInterface;
 import no.nordicsemi.android.nrftoolbox.uart.UARTManager;
+import no.nordicsemi.android.nrftoolbox.uart.UARTManagerCallbacks;
 import no.nordicsemi.android.support.v18.scanner.BluetoothLeScannerCompat;
 import no.nordicsemi.android.support.v18.scanner.ScanCallback;
 import no.nordicsemi.android.support.v18.scanner.ScanFilter;
 import no.nordicsemi.android.support.v18.scanner.ScanResult;
 import no.nordicsemi.android.support.v18.scanner.ScanSettings;
 
-public class TrueMePebble extends AppCompatActivity implements BleManagerCallbacks {
+public class TrueMePebble extends AppCompatActivity implements UARTManagerCallbacks {
     boolean scanning=false;
     BluetoothLeScannerCompat scanner;
     private ILogSession logSession;
@@ -72,7 +73,7 @@ public class TrueMePebble extends AppCompatActivity implements BleManagerCallbac
 
     protected LoggableBleManager<? extends BleManagerCallbacks> initializeManager() {
         manager=new UARTManager(this);
-        manager.setGattCallbacks((BleManagerCallbacks) this);
+        manager.setGattCallbacks(this);
         //final BPMManager manager = BPMManager.getBPMManager(getApplicationContext());
         //manager.setGattCallbacks(this);
         return manager;
@@ -222,7 +223,6 @@ public class TrueMePebble extends AppCompatActivity implements BleManagerCallbac
                 @Override
                 public void run() {
                     manager.send("WRD ROB_");
-                    Toast.makeText(getApplicationContext(), "Command Sent", Toast.LENGTH_SHORT).show();
 
                 }
             }, 8000);
@@ -289,5 +289,17 @@ public class TrueMePebble extends AppCompatActivity implements BleManagerCallbac
 
     public void btn(View view) {
         startScan();
+    }
+
+    @Override
+    public void onDataReceived(@NonNull BluetoothDevice device, String data) {
+        Toast.makeText(getApplicationContext(), "Command Sent : "+data, Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onDataSent(@NonNull BluetoothDevice device, String data) {
+        Toast.makeText(getApplicationContext(), "RESPONSE : "+data, Toast.LENGTH_SHORT).show();
+
     }
 }
