@@ -310,8 +310,13 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
             if (pebble==1)
             {
                 pebble=2;
-                bleManager.disconnect();
-                startScan();
+                bleManager.disconnect().enqueue();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        startScan();
+                    }
+                },1000);
             }else
             {
                 tv.append("\nSession Ended");
