@@ -50,7 +50,7 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
     int pebble=1;
     UARTManager manager;
 
-    boolean scanning=false;
+    boolean connected=false;
     TextView tv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +125,6 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
         final List<ScanFilter> filters = new ArrayList<>();
         filters.add(new ScanFilter.Builder().setServiceUuid(null).build());
         scanner.startScan(filters, settings, scanCallback);
-        scanning=true;
     }
     private ScanCallback scanCallback = new ScanCallback() {
         @Override
@@ -147,7 +146,6 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
                             tv.append("\nFound "+results.get(i).getDevice().getName());
                             connectDevice(results.get(i).getDevice());
                             scanner.stopScan(scanCallback);
-                            scanning=false;
                             break;
 
                         }
@@ -158,7 +156,6 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
                             tv.append("\nFound "+results.get(i).getDevice().getName());
                             connectDevice(results.get(i).getDevice());
                             scanner.stopScan(scanCallback);
-                            scanning=false;
                             break;
 
                         }
@@ -214,6 +211,7 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
     public void onDeviceConnected(@NonNull BluetoothDevice device) {
         tv.append("\nConnected to "+device.getName());
 
+        connected=true;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -232,7 +230,7 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
     @Override
     public void onDeviceDisconnected(@NonNull BluetoothDevice device) {
         tv.append("\n"+device.getName()+" Disconnected");
-
+        connected=false;
     }
 
     @Override
@@ -279,13 +277,13 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
         startScan();
     }
     public void stop(View view) {
-        if (scanning)
+        if (connected)
         {
-            scanner.stopScan(scanCallback);
-            tv.append("\nScanning Ended");
+            manager.send("SLE");
+            tv.append("\nScanning Ended for pebbele"+pebble);
         }else
         {
-            tv.append("\nBeing Executed Can't Stop");
+            tv.append("\nNot Connected");
 
         }
     }
@@ -309,14 +307,15 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
             tv.append("\n");
             if (pebble==1)
             {
-                pebble=2;
-                bleManager.disconnect().enqueue();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         startScan();
                     }
                 },1000);
+                pebble=2;
+                bleManager.disconnect().enqueue();
+
             }else
             {
                 tv.append("\nSession Ended");
