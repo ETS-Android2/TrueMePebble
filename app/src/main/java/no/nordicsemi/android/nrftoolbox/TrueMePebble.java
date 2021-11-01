@@ -223,7 +223,7 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
                     tv.append("\nSession Ended for pebbele"+pebble);
                     stoping=false;
                 }
-            },1000);
+            },2000);
 
         }else if (pebble==2)
         {
@@ -311,7 +311,6 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
             {
                 pebble=1;
             }
-            startScan();
         }catch (Exception e)
         {
 
@@ -342,7 +341,7 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
 
             }else
             {
-                tv.append("\nSession Ended");
+                tv.append("\nSession Completed");
             }
         }
 
