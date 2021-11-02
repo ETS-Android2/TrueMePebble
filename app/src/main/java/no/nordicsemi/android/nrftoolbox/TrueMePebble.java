@@ -350,11 +350,11 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
             if (pebble==1)
             {
                 manager.send("DEL 04000");
-                tv.append("\nSent: "+"DEL 05000");
+                tv.append("\nSent: "+"DEL 04000");
             }else if (pebble==2)
             {
                 manager.send("DEL 01000");
-                tv.append("\nSent: "+"DEL 05000");
+                tv.append("\nSent: "+"DEL 01000");
             }
 
         }else if (data.contains("ACK2"))
