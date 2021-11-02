@@ -51,7 +51,12 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
     UARTManager manager;
 
     boolean connected=false,stoping=false;
-    TextView tv;
+    TextView tv,seession_length,tapping_intensity,tapping_speed;
+
+    int length=15,intensity=25,speed=5000;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +65,16 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
 
         tv=findViewById(R.id.display);
         tv.setMovementMethod(new ScrollingMovementMethod());
+
+        seession_length=findViewById(R.id.tv_session_length);
+        tapping_intensity=findViewById(R.id.tv_tapping_intensity);
+        tapping_speed=findViewById(R.id.tv_tapping_speed);
+
+        seession_length.setText(String.format("%04d", length));
+        tapping_intensity.setText(String.format("%04d", intensity));
+        tapping_speed.setText(String.format("%04d", speed));
+
+
 
         bleManager = initializeManager();
 
@@ -230,9 +245,13 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    manager.send("COM 090002550003000");
-                    tv.append("\nSent: "+"COM 090002550003000");
+                    String len=String.format("%04d", length*60);
+                    String in=String.format("%03d", intensity);
+                    String spt=String.format("%04d", speed);
+                    String spv=String.format("%04d", (int)(speed*.7));
 
+                    manager.send("COM "+len+in+spt+spv);
+                    tv.append("\nSent: "+"COM "+len+in+spt+spv);
                 }
             },1000);
         }
@@ -294,8 +313,13 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
     public void start(View view) {
         if (connected)
         {
-            manager.send("COM 090002550003000");
-            tv.append("\nSent: "+"COM 090002550003000");
+            String len=String.format("%04d", length*60);
+            String in=String.format("%03d", intensity);
+            String spt=String.format("%04d", speed);
+            String spv=String.format("%04d", (int)(speed*.7));
+
+            manager.send("COM "+len+in+spt+spv);
+            tv.append("\nSent: "+"COM "+len+in+spt+spv);
 
         }
     }
@@ -323,8 +347,15 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
 
         if (data.contains("ACK1"))
         {
-            manager.send("DEL 05000");
-            tv.append("\nSent: "+"DEL 05000");
+            if (pebble==1)
+            {
+                manager.send("DEL 04000");
+                tv.append("\nSent: "+"DEL 05000");
+            }else if (pebble==2)
+            {
+                manager.send("DEL 01000");
+                tv.append("\nSent: "+"DEL 05000");
+            }
 
         }else if (data.contains("ACK2"))
         {
@@ -350,5 +381,42 @@ public class TrueMePebble extends AppCompatActivity implements UARTManagerCallba
     @Override
     public void onDataSent(@NonNull BluetoothDevice device, String data) {
         tv.append("\nSent: "+data);
+    }
+
+    public void lengthplus(View view) {
+        if (length<166)
+            length++;
+        seession_length.setText(String.format("%04d", length));
+    }
+
+    public void lengthminus(View view) {
+        if (length>1)
+            length--;
+        seession_length.setText(String.format("%04d", length));
+    }
+
+
+    public void intesnityplus(View view) {
+        if (intensity<100)
+            intensity++;
+        tapping_intensity.setText(String.format("%04d", intensity));
+    }
+
+    public void intensityminus(View view) {
+        if (intensity>1)
+            intensity--;
+        tapping_intensity.setText(String.format("%04d", intensity));
+    }
+
+    public void speedplus(View view) {
+        if (speed<9999)
+            speed++;
+        tapping_speed.setText(String.format("%04d", speed));
+    }
+
+    public void speedminus(View view) {
+        if (speed>1)
+            speed--;
+        tapping_speed.setText(String.format("%04d", speed));
     }
 }

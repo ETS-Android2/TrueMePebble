@@ -86,9 +86,9 @@
         android:layout_marginTop="16dp"
         android:background="@color/white"
         android:clickable="false"
-        android:text="Session Length"
+        android:text="Session Length (m)"
         android:textAllCaps="false"
-        android:textSize="12sp"
+        android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="@+id/btn_tapping_intensity"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
@@ -165,7 +165,7 @@
         android:text="Tapping Intensity"
         android:textAllCaps="false"
 
-        android:textSize="12sp"
+        android:textSize="10sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_session_length" />
 
@@ -176,10 +176,10 @@
         android:layout_marginTop="8dp"
         android:background="@color/white"
         android:clickable="false"
-        android:text="Tapping Speed"
+        android:text="Tapping Speed(ms)"
 
         android:textAllCaps="false"
-        android:textSize="12sp"
+        android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="@+id/btn_tapping_intensity"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_tapping_intensity" />
@@ -191,6 +191,7 @@
         android:layout_marginEnd="16dp"
         android:clickable="true"
         app:fabSize="mini"
+        android:onClick="lengthplus"
         app:layout_constraintBottom_toBottomOf="@+id/tv_session_length"
         app:layout_constraintEnd_toStartOf="@+id/tv_session_length"
         app:layout_constraintTop_toTopOf="@+id/tv_session_length"
@@ -203,6 +204,8 @@
         android:layout_marginEnd="16dp"
         android:clickable="true"
         app:fabSize="mini"
+        android:onClick="intesnityplus"
+
         app:layout_constraintBottom_toBottomOf="@+id/tv_tapping_intensity"
         app:layout_constraintEnd_toStartOf="@+id/tv_tapping_intensity"
         app:layout_constraintTop_toTopOf="@+id/tv_tapping_intensity"
@@ -215,6 +218,7 @@
         android:layout_marginEnd="16dp"
         android:clickable="true"
         app:fabSize="mini"
+        android:onClick="speedplus"
         app:layout_constraintBottom_toBottomOf="@+id/tv_tapping_speed"
         app:layout_constraintEnd_toStartOf="@+id/tv_tapping_speed"
         app:layout_constraintTop_toTopOf="@+id/tv_tapping_speed"
@@ -226,6 +230,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         app:fabSize="mini"
+        android:onClick="lengthminus"
         app:layout_constraintBottom_toBottomOf="@+id/btn_session_length"
         app:layout_constraintEnd_toStartOf="@+id/guideline10"
         app:layout_constraintTop_toTopOf="@+id/btn_session_length"
@@ -237,6 +242,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         app:fabSize="mini"
+        android:onClick="intensityminus"
         app:layout_constraintBottom_toBottomOf="@+id/btn_tapping_intensity"
         app:layout_constraintEnd_toStartOf="@+id/guideline10"
         app:layout_constraintTop_toTopOf="@+id/btn_tapping_intensity"
@@ -248,6 +254,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         app:fabSize="mini"
+        android:onClick="speedminus"
         app:layout_constraintBottom_toBottomOf="@+id/btn_tapping_speed"
         app:layout_constraintEnd_toStartOf="@+id/guideline10"
         app:layout_constraintTop_toTopOf="@+id/btn_tapping_speed"
